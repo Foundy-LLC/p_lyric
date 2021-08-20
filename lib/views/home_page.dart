@@ -5,14 +5,18 @@ import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_container.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  static const double _scrollTolerance = 4.0;
+
   final TextEditingController _textEditingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<bool> _isReachedEnd = ValueNotifier(false);
   String? lyrics;
 
   @override
@@ -21,6 +25,22 @@ class _HomePageState extends State<HomePage> {
     _textEditingController.addListener(() {
       setState(() {});
     });
+    _scrollController.addListener(() {
+      if (_scrollController.hasClients &&
+          _scrollController.offset + _scrollTolerance >=
+              _scrollController.position.maxScrollExtent) {
+        _isReachedEnd.value = true;
+      } else {
+        _isReachedEnd.value = false;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _handleSearchButton() async {
@@ -29,6 +49,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       lyrics = result;
     });
+  }
+
+  void _handleScrollButtonTap({bool toBottom = true}) {
+    _scrollController.animateTo(
+      toBottom ? _scrollController.position.maxScrollExtent : 0.0,
+      duration: kThemeChangeDuration,
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -81,6 +109,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 22),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: SizedBox(
@@ -97,6 +126,24 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: ValueListenableBuilder<bool>(
+          valueListenable: _isReachedEnd,
+          builder: (context, isReachedEnd, button) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () =>
+                  _handleScrollButtonTap(toBottom: !isReachedEnd),
+              child: AnimatedSwitcher(
+                duration: kThemeChangeDuration,
+                child:  Icon(
+                  isReachedEnd ? Icons.arrow_upward : Icons.arrow_downward,
+                  key: ValueKey(isReachedEnd),
+                  color: Colors.black87,
+                ),
+              ),
+            );
+          }),
     );
   }
 }

@@ -7,11 +7,15 @@ class DefaultContainer extends StatelessWidget {
     required this.title,
     this.actions = const [],
     required this.body,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
   }) : super(key: key);
 
   final Text title;
   final List<Widget> actions;
   final Widget body;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,8 @@ class DefaultContainer extends StatelessWidget {
     );
 
     return Scaffold(
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -39,7 +45,7 @@ class DefaultContainer extends StatelessWidget {
             tileMode: TileMode.clamp,
           ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.only(top: 40),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
