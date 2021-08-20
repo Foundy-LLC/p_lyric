@@ -3,11 +3,14 @@ import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class MelonLyricScraper {
-  static const String baseUrl = 'https://www.melon.com/song/detail.htm?songId=';
+  static const String proxyUrl = "https://foundy-proxy.herokuapp.com";
+
+  static const String baseUrl =
+      '$proxyUrl/https://www.melon.com/song/detail.htm?songId=';
 
   static String _getSearchUrl(String title) {
     title = title.replaceAll(' ', '+');
-    return 'https://www.melon.com/search/song/index.htm?q=$title&section=&searchGnbYn=Y&kkoSpl=N&kkoDpType=';
+    return '$proxyUrl/https://www.melon.com/search/song/index.htm?q=$title&section=&searchGnbYn=Y&kkoSpl=N&kkoDpType=';
   }
 
   static String _parseHtmlString(String htmlString) {
@@ -22,7 +25,10 @@ class MelonLyricScraper {
   static Future<String> searchLyric(String content) async {
     String songId;
     try {
-      final response = await http.get(Uri.parse(_getSearchUrl(content)));
+      final response = await http.get(
+        Uri.parse(_getSearchUrl(content)),
+        headers: {"X-Requested-With": "XMLHttpRequest"},
+      );
       dom.Document document = parser.parse(response.body);
       // 체크박스를 통해 음악의 id를 받아온다.
       final elements = document.getElementsByClassName('input_check');
@@ -30,11 +36,13 @@ class MelonLyricScraper {
         return element.attributes['value'];
       }).toList();
       if (lyricList.length < 2) {
+        //맨 위에 전체선택 체크박스 포함
         print('Empty search result');
         return '';
       }
       // 0번째 인덱스는 "모든 체크박스"의 값이다. 따라서 1번째 값을 이용한다.
       songId = lyricList[1] ?? '';
+      print(songId);
     } catch (e) {
       print('Fail to search song: $e');
       return '';
@@ -45,7 +53,7 @@ class MelonLyricScraper {
       dom.Document document = parser.parse(response.body);
       final elements = document.getElementsByClassName('lyric');
       final lyricList =
-      elements.map((element) => element.innerHtml).toList().map((e) {
+          elements.map((element) => element.innerHtml).toList().map((e) {
         return _parseHtmlString(e);
       });
 
