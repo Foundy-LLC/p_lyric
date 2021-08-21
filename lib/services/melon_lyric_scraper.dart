@@ -52,11 +52,11 @@ class MelonLyricScraper {
         return element.attributes['value'];
       }).toList();
       if (lyricList.length < 2) {
-        /// 맨 위에 전체선택 체크박스 포함
+        // 맨 위에 전체선택 체크박스 포함
         return '곡 정보가 없습니다.';
       }
 
-      /// 0번째 인덱스는 `모든 체크박스`의 값이다. 따라서 1번째 값을 이용한다.
+      // 0번째 인덱스는 `모든 체크박스`의 값이다. 따라서 1번째 값을 이용한다.
       songID = lyricList[1] ?? '';
       return songID;
     } catch (e) {
