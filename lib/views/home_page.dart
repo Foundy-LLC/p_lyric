@@ -101,11 +101,49 @@ class _CardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Get.textTheme;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Row(
-          children: [],
+        child: GetBuilder<PlayingMusicProvider>(
+          init: PlayingMusicProvider(),
+          builder: (musicProvider) {
+            final track = musicProvider.track;
+            final icon = track?.image;
+            final title = track?.title ?? '재생중인 음악 없음';
+            final artist = track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.';
+
+            return Row(
+              children: [
+                ClipRRect( // TODO(민성): 재생 및 다음곡 버튼 구현
+                  borderRadius: BorderRadius.circular(1000.0),
+                  child: icon == null
+                      ? const SizedBox(height: 72, width: 72)
+                      : Image(image: icon, height: 72, width: 72),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: textTheme.subtitle1!.copyWith(fontSize: 18),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        artist,
+                        style: textTheme.subtitle2!.copyWith(
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
