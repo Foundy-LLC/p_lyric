@@ -45,8 +45,3 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
-a.sh
-web/
-analysis_options.yaml
-scpauto.sh
