@@ -3,26 +3,25 @@ import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
 
 class MelonLyricScraper {
-  // TODO(시현) : `proxyUrl` 이 `web build`에서만 작동되는 문제 해결해야됨.
+  // TODO(시현) : 아래의 `proxyUrl` 이 `web build`에서만 작동되는 문제 해결해야됨.
   // 다만 위 문제는 IP 차단 문제가 없으면 굳이 해결 안해도 되는 문제임.
-
-  /// static const String proxyUrl = "https://foundy-proxy.herokuapp.com";
+  // static const String proxyUrl = "https://foundy-proxy.herokuapp.com";
 
   static const String baseUrl = 'https://www.melon.com/song/detail.htm?songId=';
 
+  /// [title], [arist] 형식으로 검색 페이지의 URL을 얻는다.
+  ///
+  /// 중복된 노래 제목이 존재하므로 `제목, 가수명`으로 검색하는 것이다.
+  /// (ex. 고백 - 10cm / 고백 - 뜨거운 감자)
   static String _getSearchPageUrl(String title, String artist) {
-    /// 중복된 노래 제목이 존재하므로 `제목, 가수명`으로 검색
-    /// (ex. 고백 - 10cm / 고백 - 뜨거운 감자)
-
     String searchQuery;
 
     title = title.replaceAll(' ', '+');
     artist = "%2C+" + artist.replaceAll(' ', '+');
 
-    /// "songTitle, artist" 형식으로 멜론에서 검색(Music Player에서 정보를 따와서 가공해서 제공)
-    /// 위 예시로 멜론에서 검색해보면 쿼리는 "?q=고백%2C+뜨거운+감자" 라고 뜸
-    /// 따라서 파라미터에 맞게 검색쿼리 가공 작업
-
+    // "songTitle, artist" 형식으로 멜론에서 검색(Music Player에서 정보를 따와서 가공해서 제공)
+    // 위 예시로 멜론에서 검색해보면 쿼리는 "?q=고백%2C+뜨거운+감자" 라고 뜸
+    // 따라서 파라미터에 맞게 검색쿼리 가공 작업
     searchQuery = title + artist;
 
     return 'https://www.melon.com/search/song/index.htm?q=$searchQuery&section=&searchGnbYn=Y&kkoSpl=N&kkoDpType=';
@@ -36,10 +35,9 @@ class MelonLyricScraper {
 
     return parsedString;
   }
-
+  
+  // TODO(시현, 민성): 곡 정보를 어떻게 가공하냐에 따라 매개변수 searchedSongUrl을 `title, artist` 형태로 바꿀지 말지 결정
   static Future<String> _getSongID(String searchedSongUrl) async {
-    // TODO(시현, 민성): 곡 정보를 어떻게 가공하냐에 따라 매개변수 searchedSongUrl을 `title, artist` 형태로 바꿀지 말지 결정
-
     String songID;
 
     try {
