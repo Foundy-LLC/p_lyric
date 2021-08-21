@@ -18,10 +18,6 @@ class MelonLyricScraper {
 
     title = title.replaceAll(' ', '+');
     artist = "%2C+" + artist.replaceAll(' ', '+');
-
-    // "songTitle, artist" 형식으로 멜론에서 검색(Music Player에서 정보를 따와서 가공해서 제공)
-    // 위 예시로 멜론에서 검색해보면 쿼리는 "?q=고백%2C+뜨거운+감자" 라고 뜸
-    // 따라서 파라미터에 맞게 검색쿼리 가공 작업
     searchQuery = title + artist;
 
     return 'https://www.melon.com/search/song/index.htm?q=$searchQuery&section=&searchGnbYn=Y&kkoSpl=N&kkoDpType=';
