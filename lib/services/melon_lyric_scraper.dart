@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
+import 'package:html/dom.dart' as dom;
+
+/*
+멜론 크롤링 기능 담당 파일
+
+proxyUrl 은 web build 에서만 작동이 됨... ㅠㅠ 
+이용해야 할 parameter 는 노래 제목과 가수 명
+↪ 그 이유는 중복된 노래 제목이 존재 (ex. 고백 - 10cm / 고백 - 뜨거운 감자)
+
+각 함수는 최소한의 단위로 작성
+✔ 1 function 1 progress
+
+*/
+
+class MelonLyricScraper {
+  // static const String proxyUrl = "https://foundy-proxy.herokuapp.com";
+  static const String baseUrl = 'https://www.melon.com/song/detail.htm?songId=';
+
+  static String _getSearchPageUrl(String title, String artist) {
+    String searchQuery;
+
+    title = title.replaceAll(' ', '+');
+    artist = "%2C+" + artist.replaceAll(' ', '+');
+
+    /*
+    ex) 고백, 뜨거운 감자
+    ↪ 우리 앱은 무조건 "songTitle, artist" 형식으로 멜론에서 검색할거임(Music Player에서 정보를 따와서 가공해서 제공)
+    위 예시로 멜론에서 검색해보면 쿼리는 "?q=고백%2C+뜨거운+감자" 라고 뜸
+    따라서 파라미터에 맞게 검색쿼리 가공 작업
+    */
+
+    searchQuery = title + artist;
+
+    return 'https://www.melon.com/search/song/index.htm?q=$searchQuery&section=&searchGnbYn=Y&kkoSpl=N&kkoDpType=';
+  }
+
+  static String _parseHtmlString(String htmlString) {
+    htmlString = htmlString.replaceAll('<br>', '\n');
+    final document = parser.parse(htmlString);
+    final String parsedString =
+        parser.parse(document.body!.text).documentElement!.text;
+
+    return parsedString;
+  }
+
+  static Future<String> _getSongID(String searchedSongUrl) async {
+    String songID;
+
+    try {
+      final response = await http.get(
+        Uri.parse(searchedSongUrl),
+      );
+      dom.Document document = parser.parse(response.body);
+      final elements = document.getElementsByClassName('input_check');
+      final lyricList = elements.map((element) {
+        return element.attributes['value'];
+      }).toList();
+      if (lyricList.length < 2) {
+        //맨 위에 전체선택 체크박스 포함
+        return '검색하신 곡 정보가 없습니다.';
+      }
+      // 0번째 인덱스는 "모든 체크박스"의 값이다. 따라서 1번째 값을 이용한다.
+      songID = lyricList[1] ?? '';
+      return songID;
+    } catch (e) {
+      return '노래ID 검색 에러 발생: ${e}';
+    }
+  }
+
+  static Future<String> getLyrics(String songDataInput) async {
+    String title = songDataInput.split(", ")[0];
+    String artist = songDataInput.split(", ")[1];
+
+    String searchPageUrl = _getSearchPageUrl(title, artist);
+    String songID = await _getSongID(searchPageUrl);
+
+    try {
+      final response = await http.get(Uri.parse(baseUrl + songID));
+      dom.Document document = parser.parse(response.body);
+      final elements = document.getElementsByClassName('lyric');
+      final lyricList =
+          elements.map((element) => element.innerHtml).toList().map((e) {
+        return _parseHtmlString(e);
+      });
+
+      if (lyricList.isEmpty) throw 'Lyric Empty';
+
+      return lyricList.join('\n');
+    } catch (e) {
+      return '${title} 가사 검색 에러 발생: ${e} ${songID}';
+    }
+  }
+}
