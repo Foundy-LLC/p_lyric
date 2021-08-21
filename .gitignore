@@ -49,3 +49,4 @@ app.*.map.json
 a.sh
 web/
 analysis_options.yaml
+scpauto.sh
