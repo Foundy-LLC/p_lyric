@@ -31,7 +31,7 @@ class MelonLyricScraper {
 
     return parsedString;
   }
-  
+
   // TODO(시현, 민성): 곡 정보를 어떻게 가공하냐에 따라 매개변수 searchedSongUrl을 `title, artist` 형태로 바꿀지 말지 결정
   static Future<String> _getSongID(String searchedSongUrl) async {
     String songID;
@@ -58,10 +58,7 @@ class MelonLyricScraper {
     }
   }
 
-  static Future<String> getLyrics(String songDataInput) async {
-    String title = songDataInput.split(", ")[0];
-    String artist = songDataInput.split(", ")[1];
-
+  static Future<String> getLyrics(String title, String artist) async {
     String searchPageUrl = _getSearchPageUrl(title, artist);
     String songID = await _getSongID(searchPageUrl);
 
