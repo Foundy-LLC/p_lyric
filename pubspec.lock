@@ -144,6 +144,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  nowplaying:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: p-lyric-app
+      resolved-ref: "3f8a321cf62d070fe524a6c407a3a85f2b024f51"
+      url: "https://github.com/jja08111/nowplaying.git"
+    source: git
+    version: "2.0.2"
+  package_info:
+    dependency: transitive
+    description:
+      name: package_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   path:
     dependency: transitive
     description:
