@@ -51,17 +51,12 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    if (_scrollController.offset + _scrollTolerance >=
-        _scrollController.position.maxScrollExtent) {
-      _isReachedEnd.value = true;
-    } else {
-      _isReachedEnd.value = false;
-    }
-
-    if (_scrollController.position.maxScrollExtent == 0.0)
-      _showButton.value = false;
-    else
-      _showButton.value = true;
+    _isReachedEnd.value = (_scrollController.offset + _scrollTolerance >=
+            _scrollController.position.maxScrollExtent)
+        ? true
+        : false;
+    _showButton.value =
+        _scrollController.position.maxScrollExtent == 0.0 ? false : true;
   }
 
   void _handleScrollButtonTap({bool toBottom = true}) {
