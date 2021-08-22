@@ -6,16 +6,31 @@ import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_container.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  static const double _scrollTolerance = 4.0;
+
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<bool> _isReachedEnd = ValueNotifier(false);
+
   @override
   void initState() {
     super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.hasClients &&
+          _scrollController.offset + _scrollTolerance >=
+              _scrollController.position.maxScrollExtent) {
+        _isReachedEnd.value = true;
+      } else {
+        _isReachedEnd.value = false;
+      }
+    });
 
     // TODO(민성): 설정 화면 혹은 다이어로그 띄워서 사용자에게 권한에 대해 설명하기
     NowPlaying.instance.isEnabled().then((bool isEnabled) async {
@@ -28,6 +43,14 @@ class _HomePageState extends State<HomePage> {
         ));
       }
     });
+  }
+
+  void _handleScrollButtonTap({bool toBottom = true}) {
+    _scrollController.animateTo(
+      toBottom ? _scrollController.position.maxScrollExtent : 0.0,
+      duration: kThemeChangeDuration,
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -59,6 +82,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 22),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: SizedBox(
@@ -90,6 +114,23 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: ValueListenableBuilder<bool>(
+          valueListenable: _isReachedEnd,
+          builder: (context, isReachedEnd, button) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () => _handleScrollButtonTap(toBottom: !isReachedEnd),
+              child: AnimatedSwitcher(
+                duration: kThemeChangeDuration,
+                child: Icon(
+                  isReachedEnd ? Icons.arrow_upward : Icons.arrow_downward,
+                  key: ValueKey(isReachedEnd),
+                  color: Colors.black87,
+                ),
+              ),
+            );
+          }),
     );
   }
 }
@@ -116,7 +157,8 @@ class _CardView extends StatelessWidget {
 
             return Row(
               children: [
-                ClipRRect( // TODO(민성): 재생 및 다음곡 버튼 구현
+                ClipRRect(
+                  // TODO(민성): 재생 및 다음곡 버튼 구현
                   borderRadius: BorderRadius.circular(1000.0),
                   child: icon == null
                       ? const SizedBox(height: 72, width: 72)
