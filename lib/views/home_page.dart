@@ -17,20 +17,13 @@ class _HomePageState extends State<HomePage> {
 
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _isReachedEnd = ValueNotifier(false);
+  final ValueNotifier<bool> _showButton = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
 
-    _scrollController.addListener(() {
-      if (_scrollController.hasClients &&
-          _scrollController.offset + _scrollTolerance >=
-              _scrollController.position.maxScrollExtent) {
-        _isReachedEnd.value = true;
-      } else {
-        _isReachedEnd.value = false;
-      }
-    });
+    _scrollController.addListener(_updateScrollButton);
 
     // TODO(민성): 설정 화면 혹은 다이어로그 띄워서 사용자에게 권한에 대해 설명하기
     NowPlaying.instance.isEnabled().then((bool isEnabled) async {
@@ -43,6 +36,32 @@ class _HomePageState extends State<HomePage> {
         ));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _updateScrollButton() {
+    if (!_scrollController.hasClients) {
+      _isReachedEnd.value = false;
+      _showButton.value = false;
+      return;
+    }
+
+    if (_scrollController.offset + _scrollTolerance >=
+        _scrollController.position.maxScrollExtent) {
+      _isReachedEnd.value = true;
+    } else {
+      _isReachedEnd.value = false;
+    }
+
+    if (_scrollController.position.maxScrollExtent == 0.0)
+      _showButton.value = false;
+    else
+      _showButton.value = true;
   }
 
   void _handleScrollButtonTap({bool toBottom = true}) {
@@ -116,8 +135,10 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ValueListenableBuilder<bool>(
+        valueListenable: _showButton,
+        child: ValueListenableBuilder<bool>(
           valueListenable: _isReachedEnd,
-          builder: (context, isReachedEnd, button) {
+          builder: (_, isReachedEnd, button) {
             return FloatingActionButton(
               mini: true,
               onPressed: () => _handleScrollButtonTap(toBottom: !isReachedEnd),
@@ -130,7 +151,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             );
-          }),
+          },
+        ),
+        builder: (_, showButton, child) =>
+            showButton ? child! : const SizedBox(),
+      ),
     );
   }
 }
