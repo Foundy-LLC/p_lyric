@@ -98,12 +98,17 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.only(
+                  left: 24.0,
+                  right: 24.0,
+                  bottom: 16.0,
+                ),
                 child: SizedBox(
                   width: double.infinity,
                   child: DefaultTextStyle(
                     style: textTheme.bodyText1!.copyWith(
                       color: Color(0xE6FFFFFF),
+                      height: 1.8,
                     ),
                     child: GetBuilder<PlayingMusicProvider>(
                       init: PlayingMusicProvider(),
