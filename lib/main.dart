@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nowplaying/nowplaying.dart';
 import 'package:p_lyric/themes.dart';
 import 'package:p_lyric/views/home_page.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  NowPlaying.instance.start();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
