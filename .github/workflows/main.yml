@@ -1,30 +1,30 @@
-name: Flutter tests
+name: Flutter CI
+
+# This workflow is triggered on pushes to the repository.
+
 on:
   push:
     branches: [ main, release, develop ]
-  pull_request:
-    branches: [ main, release, develop  ]
+    
+# on: push    # Default will running for every branch.
+    
 jobs:
-  unit-test:
-    name: Unit tests on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+  build:
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
     steps:
-      # Set up Flutter.
-      - name: Clone Flutter repository with master channel
-        uses: subosito/flutter-action@v1.5.0
-        with:
-          channel: stable
-      - run: flutter doctor -v
-
-      - name: Get pub packages
-        uses: actions/checkout@v2
-      - run: flutter pub get
-
-      - run: flutter analyze
-      - name: Ensure the Dart code is formatted correctly
-        run: flutter format --set-exit-if-changed --dry-run .
-      - name: Run Flutter unit tests
-        run: flutter test
+    
+    # Setup the flutter environment.
+    - uses: subosito/flutter-action@v1.5.3
+    
+    # Get flutter dependencies.
+    - run: flutter pub get
+    
+    # Check for any formatting issues in the code.
+    - run: flutter format --set-exit-if-changed .
+    
+    # Statically analyze the Dart code for any errors.
+    - run: flutter analyze .
+    
+    # Run widget tests for our flutter project.
+    - run: flutter test
