@@ -19,7 +19,8 @@ class PlayingMusicProvider extends GetxController {
   }
 
   void _updateLyric(NowPlayingTrack track) async {
-    _lyric = await MelonLyricScraper.getLyrics(track.title ?? '');
+    _lyric = await MelonLyricScraper.getLyrics(
+        track.title ?? '', track.artist ?? '');
     update();
   }
 

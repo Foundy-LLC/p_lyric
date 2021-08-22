@@ -58,10 +58,7 @@ class MelonLyricScraper {
     }
   }
 
-  static Future<String> getLyrics(String songDataInput) async {
-    String title = songDataInput.split(", ")[0];
-    String artist = songDataInput.split(", ")[1];
-
+  static Future<String> getLyrics(String title, String artist) async {
     String searchPageUrl = _getSearchPageUrl(title, artist);
     String songID = await _getSongID(searchPageUrl);
 
