@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
-import 'package:p_lyric/servies/melon_lyric_scraper.dart';
+import 'package:p_lyric/services/melon_lyric_scraper.dart';
 
 class PlayingMusicProvider extends GetxController {
   PlayingMusicProvider();
@@ -19,7 +19,7 @@ class PlayingMusicProvider extends GetxController {
   }
 
   void _updateLyric(NowPlayingTrack track) async {
-    _lyric = await MelonLyricScraper.searchLyric(track.title ?? '');
+    _lyric = await MelonLyricScraper.getLyrics(track.title ?? '');
     update();
   }
 
