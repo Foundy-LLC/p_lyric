@@ -183,14 +183,8 @@ class _CardView extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(1000.0),
-                    child: coverImage == null
-                        ? const SizedBox(height: 88, width: 88)
-                        : Image(image: coverImage, height: 88, width: 88),
-                  ),
+                  child: _AlbumCoverImage(image: coverImage),
                 ),
-                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,6 +214,36 @@ class _CardView extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _AlbumCoverImage extends StatelessWidget {
+  const _AlbumCoverImage({Key? key, required this.image}) : super(key: key);
+
+  final ImageProvider<Object>? image;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = image != null;
+    final imageDiameter = 88.0;
+
+    return AnimatedContainer(
+      duration: kThemeChangeDuration,
+      curve: Curves.easeOut,
+      margin: EdgeInsets.only(right: hasImage ? 16.0 : 0.0),
+      height: imageDiameter,
+      width: hasImage ? imageDiameter : 0.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(1000.0),
+        child: hasImage
+            ? Image(
+                image: image!,
+                height: imageDiameter,
+                width: imageDiameter,
+              )
+            : const SizedBox(),
       ),
     );
   }
