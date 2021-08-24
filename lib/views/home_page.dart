@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
-import 'package:p_lyric/provider/playing_music_provider.dart';
+import 'package:p_lyric/provider/music_provider.dart';
 import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_container.dart';
 
@@ -52,11 +52,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     _isReachedEnd.value = (_scrollController.offset + _scrollTolerance >=
-            _scrollController.position.maxScrollExtent)
+        _scrollController.position.maxScrollExtent)
         ? true
         : false;
     _showButton.value =
-        _scrollController.position.maxScrollExtent == 0.0 ? false : true;
+    _scrollController.position.maxScrollExtent == 0.0 ? false : true;
   }
 
   void _handleScrollButtonTap({bool toBottom = true}) {
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: _CardView(),
+            child: const _CardView(),
           ),
           const SizedBox(height: 22),
           Expanded(
@@ -110,8 +110,8 @@ class _HomePageState extends State<HomePage> {
                       color: Color(0xE6FFFFFF),
                       height: 1.8,
                     ),
-                    child: GetBuilder<PlayingMusicProvider>(
-                      init: PlayingMusicProvider(),
+                    child: GetBuilder<MusicProvider>(
+                      init: MusicProvider(),
                       builder: (musicProvider) {
                         if (musicProvider.track != null) {
                           final title = musicProvider.track!.title;
@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage> {
                           if (title == null) return Text("검색 결과가 없습니다.");
 
                           if (musicProvider.lyric.isNotEmpty) {
+                            _scrollController.jumpTo(0.0);
                             return Text(musicProvider.lyric);
                           }
                           return Center(child: CircularProgressIndicator());
@@ -154,16 +155,14 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         builder: (_, showButton, child) =>
-            showButton ? child! : const SizedBox(),
+        showButton ? child! : const SizedBox(),
       ),
     );
   }
 }
 
 class _CardView extends StatelessWidget {
-  const _CardView({
-    Key? key,
-  }) : super(key: key);
+  const _CardView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,40 +170,49 @@ class _CardView extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: GetBuilder<PlayingMusicProvider>(
-          init: PlayingMusicProvider(),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: GetBuilder<MusicProvider>(
+          init: MusicProvider(),
           builder: (musicProvider) {
             final track = musicProvider.track;
-            final icon = track?.image;
+            final coverImage = track?.image;
             final title = track?.title ?? '재생중인 음악 없음';
             final artist = track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.';
 
             return Row(
               children: [
-                ClipRRect(
-                  // TODO(민성): 재생 및 다음곡 버튼 구현
-                  borderRadius: BorderRadius.circular(1000.0),
-                  child: icon == null
-                      ? const SizedBox(height: 72, width: 72)
-                      : Image(image: icon, height: 72, width: 72),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(1000.0),
+                    child: coverImage == null
+                        ? const SizedBox(height: 88, width: 88)
+                        : Image(image: coverImage, height: 88, width: 88),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 10.0),
                       Text(
                         title,
-                        style: textTheme.subtitle1!.copyWith(fontSize: 18),
+                        style: textTheme.subtitle1,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         artist,
                         style: textTheme.subtitle2!.copyWith(
-                          color: Colors.black54,
+                          color:
+                          Get.isDarkMode ? Colors.white54 : Colors.black54,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      const _ControlBar(),
                     ],
                   ),
                 ),
@@ -212,6 +220,90 @@ class _CardView extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _ControlBar extends StatefulWidget {
+  const _ControlBar({Key? key}) : super(key: key);
+
+  @override
+  _ControlBarState createState() => _ControlBarState();
+}
+
+class _ControlBarState extends State<_ControlBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: kThemeChangeDuration,
+      reverseDuration: kThemeChangeDuration,
+    );
+
+    _animation = CurvedAnimation(
+      parent: Tween(begin: 0.0, end: 1.0).animate(_controller),
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: IconThemeData(
+        color: Get.isDarkMode ? Colors.white : Colors.black,
+      ),
+      child: GetBuilder<MusicProvider>(
+        builder: (musicProvider) {
+          switch (musicProvider.state) {
+            case NowPlayingState.playing:
+              _controller.forward();
+              break;
+            case NowPlayingState.paused:
+            case NowPlayingState.stopped:
+              _controller.reverse();
+              break;
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              IconButton(
+                onPressed: musicProvider.skipPrevious,
+                iconSize: 32,
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.skip_previous),
+              ),
+              IconButton(
+                onPressed: musicProvider.playOrPause,
+                iconSize: 40,
+                padding: EdgeInsets.zero,
+                icon: AnimatedIcon(
+                  icon: AnimatedIcons.play_pause,
+                  progress: _animation,
+                ),
+              ),
+              IconButton(
+                onPressed: musicProvider.skipNext,
+                iconSize: 32,
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.skip_next),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
