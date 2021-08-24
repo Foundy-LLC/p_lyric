@@ -249,7 +249,7 @@ class _ControlBarState extends State<_ControlBar>
     _animation = CurvedAnimation(
       parent: Tween(begin: 0.0, end: 1.0).animate(_controller),
       curve: Curves.easeOut,
-      reverseCurve: Curves.easeOut,
+      reverseCurve: Curves.easeIn,
     );
   }
 
