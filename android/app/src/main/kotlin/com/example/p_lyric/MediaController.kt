@@ -14,7 +14,8 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
         private const val CHANNEL = "com.example.p_lyric/MusicProvider"
     }
 
-    private var audioManager: AudioManager? = null
+    private var audioManager: AudioManager? =
+        getSystemService<AudioManager>(context, AudioManager::class.java)
 
     init {
         MethodChannel(
@@ -32,10 +33,9 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
                 }
             )
         }
-        audioManager = getSystemService<AudioManager>(context, AudioManager::class.java)
     }
 
-    private fun control(action: Int) : Boolean {
+    private fun control(action: Int): Boolean {
         try {
             if (audioManager != null) {
                 val downEvent = KeyEvent(KeyEvent.ACTION_DOWN, action)
