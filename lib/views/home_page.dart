@@ -52,11 +52,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     _isReachedEnd.value = (_scrollController.offset + _scrollTolerance >=
-        _scrollController.position.maxScrollExtent)
+            _scrollController.position.maxScrollExtent)
         ? true
         : false;
     _showButton.value =
-    _scrollController.position.maxScrollExtent == 0.0 ? false : true;
+        _scrollController.position.maxScrollExtent == 0.0 ? false : true;
   }
 
   void _handleScrollButtonTap({bool toBottom = true}) {
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         builder: (_, showButton, child) =>
-        showButton ? child! : const SizedBox(),
+            showButton ? child! : const SizedBox(),
       ),
     );
   }
@@ -207,7 +207,7 @@ class _CardView extends StatelessWidget {
                         artist,
                         style: textTheme.subtitle2!.copyWith(
                           color:
-                          Get.isDarkMode ? Colors.white54 : Colors.black54,
+                              Get.isDarkMode ? Colors.white54 : Colors.black54,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

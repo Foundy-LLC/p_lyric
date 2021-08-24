@@ -7,7 +7,7 @@ import 'utils/waiter.dart';
 
 class MusicProvider extends GetxController {
   static const _channel =
-  const MethodChannel('com.example.p_lyric/MusicProvider');
+      const MethodChannel('com.example.p_lyric/MusicProvider');
 
   /// 현재 재생되고 있는 트랙을 반환한다.
   NowPlayingTrack? get track => _track.value;
