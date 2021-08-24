@@ -175,7 +175,6 @@ class _CardView extends StatelessWidget {
           init: MusicProvider(),
           builder: (musicProvider) {
             final track = musicProvider.track;
-            final coverImage = track?.image;
             final title = track?.title ?? '재생중인 음악 없음';
             final artist = track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.';
 
@@ -183,7 +182,7 @@ class _CardView extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: _AlbumCoverImage(image: coverImage),
+                  child: const _AlbumCoverImage(),
                 ),
                 Expanded(
                   child: Column(
@@ -220,31 +219,35 @@ class _CardView extends StatelessWidget {
 }
 
 class _AlbumCoverImage extends StatelessWidget {
-  const _AlbumCoverImage({Key? key, required this.image}) : super(key: key);
-
-  final ImageProvider<Object>? image;
+  const _AlbumCoverImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = image != null;
     final imageDiameter = 88.0;
 
-    return AnimatedContainer(
-      duration: kThemeChangeDuration,
-      curve: Curves.easeOut,
-      margin: EdgeInsets.only(right: hasImage ? 16.0 : 0.0),
-      height: imageDiameter,
-      width: hasImage ? imageDiameter : 0.0,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(1000.0),
-        child: hasImage
-            ? Image(
-                image: image!,
-                height: imageDiameter,
-                width: imageDiameter,
-              )
-            : const SizedBox(),
-      ),
+    return GetBuilder<MusicProvider>(
+      builder: (musicProvider) {
+        final image = musicProvider.track?.image;
+        final hasImage = image != null;
+
+        return AnimatedContainer(
+          duration: kThemeChangeDuration,
+          curve: Curves.easeOut,
+          margin: EdgeInsets.only(right: hasImage ? 16.0 : 0.0),
+          height: imageDiameter,
+          width: hasImage ? imageDiameter : 0.0,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(1000.0),
+            child: hasImage
+                ? Image(
+                    image: image!,
+                    height: imageDiameter,
+                    width: imageDiameter,
+                  )
+                : const SizedBox(),
+          ),
+        );
+      },
     );
   }
 }
