@@ -238,13 +238,16 @@ class _AlbumCoverImage extends StatelessWidget {
           width: hasImage ? imageDiameter : 0.0,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(1000.0),
-            child: hasImage
-                ? Image(
-                    image: image!,
-                    height: imageDiameter,
-                    width: imageDiameter,
-                  )
-                : const SizedBox(),
+            child: AnimatedSwitcher(
+              duration: kThemeChangeDuration,
+              child: hasImage
+                  ? Image(
+                      image: image!,
+                      height: imageDiameter,
+                      width: imageDiameter,
+                    )
+                  : const SizedBox(),
+            ),
           ),
         );
       },
