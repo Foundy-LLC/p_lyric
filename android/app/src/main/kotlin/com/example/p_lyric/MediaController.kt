@@ -43,6 +43,8 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
 
                 val upEvent = KeyEvent(KeyEvent.ACTION_UP, action)
                 audioManager!!.dispatchMediaKeyEvent(upEvent)
+            } else {
+                return false
             }
         } catch (e: Exception) {
             Log.e("MusicProvider", e.toString())
