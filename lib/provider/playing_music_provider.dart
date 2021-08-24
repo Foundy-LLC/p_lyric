@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
 import 'package:p_lyric/services/melon_lyric_scraper.dart';
 
+import 'utils/waiter.dart';
+
 class PlayingMusicProvider extends GetxController {
   PlayingMusicProvider();
 
@@ -15,7 +17,7 @@ class PlayingMusicProvider extends GetxController {
   void onInit() {
     super.onInit();
     NowPlaying.instance.stream.listen(_listenTrackEvent);
-    debounce(_track, _updateLyric, time: const Duration(milliseconds: 200));
+    wait(_track, _updateLyric, time: const Duration(milliseconds: 1000));
   }
 
   void _updateLyric(NowPlayingTrack track) async {
