@@ -111,7 +111,6 @@ class _HomePageState extends State<HomePage> {
                       height: 1.8,
                     ),
                     child: GetBuilder<MusicProvider>(
-                      init: MusicProvider(),
                       builder: (musicProvider) {
                         if (musicProvider.track != null) {
                           final title = musicProvider.track!.title;
@@ -171,47 +170,41 @@ class _CardView extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: GetBuilder<MusicProvider>(
-          init: MusicProvider(),
-          builder: (musicProvider) {
-            final track = musicProvider.track;
-            final title = track?.title ?? '재생중인 음악 없음';
-            final artist = track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.';
-
-            return Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: const _AlbumCoverImage(),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 10.0),
-                      Text(
-                        title,
-                        style: textTheme.subtitle1,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        artist,
-                        style: textTheme.subtitle2!.copyWith(
-                          color:
-                              Get.isDarkMode ? Colors.white54 : Colors.black54,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const _ControlBar(),
-                    ],
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: const _AlbumCoverImage(),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10.0),
+                  GetBuilder<MusicProvider>(
+                    builder: (musicProvider) => Text(
+                      musicProvider.track?.title ?? '재생중인 음악 없음',
+                      style: textTheme.subtitle1,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                  const SizedBox(height: 8),
+                  GetBuilder<MusicProvider>(
+                    builder: (musicProvider) => Text(
+                      musicProvider.track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.',
+                      style: textTheme.subtitle2!.copyWith(
+                        color: Get.isDarkMode ? Colors.white54 : Colors.black54,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const _ControlBar(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -226,6 +219,7 @@ class _AlbumCoverImage extends StatelessWidget {
     final imageDiameter = 88.0;
 
     return GetBuilder<MusicProvider>(
+      init: MusicProvider(),
       builder: (musicProvider) {
         final image = musicProvider.track?.image;
         final hasImage = image != null;
