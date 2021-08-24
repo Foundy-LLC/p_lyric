@@ -50,33 +50,31 @@ class MusicProvider extends GetxController {
     if (updated) update();
   }
 
-  /// 음악 플레이어의 [state]를 고려하여 음악을 재생 혹은 정지한다.
-  ///
   /// 플레이어가 음악을 재생중인 경우 정지하며, 정지되어 있는 경우 재생한다.
   Future<bool> playOrPause() async {
-    bool result;
     try {
-      switch (state) {
-        case NowPlayingState.playing:
-          result = await _channel.invokeMethod('pause'); // TODO: IOS 구현
-          break;
-        case NowPlayingState.paused:
-        case NowPlayingState.stopped:
-          result = await _channel.invokeMethod('play'); // TODO: IOS 구현
-          break;
-      }
+      return await _channel.invokeMethod('playOrPause'); // TODO: IOS 구현
     } on PlatformException catch (e) {
       print("Failed to control music: '${e.message}'.");
-      result = false;
+      return false;
     }
-    return result;
   }
 
   Future<bool> skipPrevious() async {
-    return await _channel.invokeMethod('skipPrevious'); // TODO: IOS 구현
+    try {
+      return await _channel.invokeMethod('skipPrevious'); // TODO: IOS 구현
+    } on PlatformException catch (e) {
+      print("Failed to control music: '${e.message}'.");
+      return false;
+    }
   }
 
   Future<bool> skipNext() async {
-    return await _channel.invokeMethod('skipNext'); // TODO: IOS 구현
+    try {
+      return await _channel.invokeMethod('skipNext'); // TODO: IOS 구현
+    } on PlatformException catch (e) {
+      print("Failed to control music: '${e.message}'.");
+      return false;
+    }
   }
 }

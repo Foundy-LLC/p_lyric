@@ -14,7 +14,7 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
         private const val CHANNEL = "com.example.p_lyric/MusicProvider"
     }
 
-    private var audioManager: AudioManager? =
+    private val audioManager: AudioManager? =
         getSystemService<AudioManager>(context, AudioManager::class.java)
 
     init {
@@ -25,8 +25,7 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
             val method = call.method
             result.success(
                 when {
-                    method.equals("play") -> control(KeyEvent.KEYCODE_MEDIA_PLAY)
-                    method.equals("pause") -> control(KeyEvent.KEYCODE_MEDIA_PAUSE)
+                    method.equals("playOrPause") -> control(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
                     method.equals("skipPrevious") -> control(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
                     method.equals("skipNext") -> control(KeyEvent.KEYCODE_MEDIA_NEXT)
                     else -> false
@@ -39,10 +38,10 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
         try {
             if (audioManager != null) {
                 val downEvent = KeyEvent(KeyEvent.ACTION_DOWN, action)
-                audioManager!!.dispatchMediaKeyEvent(downEvent)
+                audioManager.dispatchMediaKeyEvent(downEvent)
 
                 val upEvent = KeyEvent(KeyEvent.ACTION_UP, action)
-                audioManager!!.dispatchMediaKeyEvent(upEvent)
+                audioManager.dispatchMediaKeyEvent(upEvent)
             } else {
                 return false
             }
