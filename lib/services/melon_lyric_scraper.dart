@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
+import 'package:p_lyric/services/song_data_preprocessor.dart';
 
 class MelonLyricScraper {
   // TODO(시현) : 아래의 `proxyUrl` 이 `web build`에서만 작동되는 문제 해결해야됨.
@@ -31,7 +32,7 @@ class MelonLyricScraper {
 
     return parsedString;
   }
-  
+
   // TODO(시현, 민성): 곡 정보를 어떻게 가공하냐에 따라 매개변수 searchedSongUrl을 `title, artist` 형태로 바꿀지 말지 결정
   static Future<String> _getSongID(String searchedSongUrl) async {
     String songID;
@@ -47,18 +48,23 @@ class MelonLyricScraper {
       }).toList();
       if (lyricList.length < 2) {
         // 맨 위에 전체선택 체크박스 포함
-        return '곡 정보가 없습니다.';
+        return '곡 정보가 없습니다 😢';
       }
 
       // 0번째 인덱스는 `모든 체크박스`의 값이다. 따라서 1번째 값을 이용한다.
       songID = lyricList[1] ?? '';
       return songID;
     } catch (e) {
-      return '노래ID 검색 에러 발생: $e';
+      return '🤔 노래 검색 에러\n$e';
     }
   }
 
-  static Future<String> getLyrics(String title, String artist) async {
+  static Future<String> getLyrics(String songTitle, String songArtist) async {
+    if (songTitle == '' || songArtist == '') return "곡 정보가 없습니다 😢";
+
+    String title = SongDataPreprocessor.filterArtist(songTitle);
+    String artist = SongDataPreprocessor.filterArtist(songArtist);
+
     String searchPageUrl = _getSearchPageUrl(title, artist);
     String songID = await _getSongID(searchPageUrl);
 
@@ -71,11 +77,12 @@ class MelonLyricScraper {
         return _parseHtmlString(e);
       });
 
-      if (lyricList.isEmpty) throw 'Lyric Empty';
+      if (lyricList.isEmpty)
+        throw '가사를 찾을 수 없습니다\nTitle : $title\nArtist : $artist';
 
       return lyricList.join('\n');
     } catch (e) {
-      return '$title 가사 검색 에러 발생: $e $songID';
+      return '🤔 노래 검색 에러\n$e';
     }
   }
 }
