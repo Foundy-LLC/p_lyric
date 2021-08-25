@@ -14,8 +14,7 @@ class MediaController(flutterEngine: FlutterEngine, context: Context) {
         private const val CHANNEL = "com.example.p_lyric/MusicProvider"
     }
 
-    private val audioManager: AudioManager? =
-        getSystemService<AudioManager>(context, AudioManager::class.java)
+    private val audioManager: AudioManager? = getSystemService(context, AudioManager::class.java)
 
     init {
         MethodChannel(
