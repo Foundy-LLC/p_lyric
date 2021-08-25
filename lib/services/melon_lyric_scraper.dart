@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
-import 'package:p_lyric/provider/song_data_preprocess.dart';
+import 'package:p_lyric/services/song_data_preprocessor.dart';
 
 class MelonLyricScraper {
   // TODO(시현) : 아래의 `proxyUrl` 이 `web build`에서만 작동되는 문제 해결해야됨.
@@ -62,8 +62,8 @@ class MelonLyricScraper {
   static Future<String> getLyrics(String songTitle, String songArtist) async {
     if (songTitle == '' || songArtist == '') return "곡 정보가 없습니다 😢";
 
-    String title = SongDataPreprocess.filterArtist(songTitle);
-    String artist = SongDataPreprocess.filterArtist(songArtist);
+    String title = SongDataPreprocessor.filterArtist(songTitle);
+    String artist = SongDataPreprocessor.filterArtist(songArtist);
 
     String searchPageUrl = _getSearchPageUrl(title, artist);
     String songID = await _getSongID(searchPageUrl);
