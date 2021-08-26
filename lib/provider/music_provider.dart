@@ -53,6 +53,7 @@ class MusicProvider extends GetxController {
       await NowPlaying.instance.playOrPause(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
       print("Failed to play or pause music: '${e.message}'.");
+      _showErrorSnackBar();
     }
   }
 
@@ -61,6 +62,7 @@ class MusicProvider extends GetxController {
       await NowPlaying.instance.skipToPrevious(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
       print("Failed to skip to previous music: '${e.message}'.");
+      _showErrorSnackBar();
     }
   }
 
@@ -69,6 +71,14 @@ class MusicProvider extends GetxController {
       await NowPlaying.instance.skipToNext(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
       print("Failed to skip to next music: '${e.message}'.");
+      _showErrorSnackBar();
     }
+  }
+
+  void _showErrorSnackBar() {
+    Get.showSnackbar(GetBar(
+      message: '음악 컨트롤 에러 발생',
+      duration: const Duration(seconds: 3),
+    ));
   }
 }
