@@ -43,7 +43,7 @@ class SongDataPreprocessor {
     if (!_korean.hasMatch(filteredTitle) && !_english.hasMatch(filteredTitle))
       filteredTitle = _divideLanguage(title);
 
-    return filteredTitle;
+    return filteredTitle.trim();
   }
 
   /// 멜론 검색에 최적화 된 가수명 필터링 함수이다.
@@ -62,6 +62,6 @@ class SongDataPreprocessor {
     if (!_korean.hasMatch(filteredArtist) && !_english.hasMatch(filteredArtist))
       filteredArtist = _divideLanguage(filteredArtist);
 
-    return filteredArtist;
+    return filteredArtist.trim();
   }
 }
