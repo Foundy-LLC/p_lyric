@@ -1,13 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:p_lyric/services/melon_lyric_scraper.dart';
-import 'package:get/get.dart';
 import 'package:p_lyric/services/song_data_preprocessor.dart';
 
 void main() {
   test("Melon lyric scraper title and artist filtering test", () {
-    String? expectTitle;
-    String? expectArtist;
-
     // TEST CASE
     // 1. REMEDY(피처링:청하(CHUNG HA)) - 창모(CHANGMO) → REMEDY - 창모
     // 2. 달려 - 염따, 더 콰이엇(The Quiett), 팔토알토 및 사이먼 도미닉 및 딥플로우(Deepflow) → 달려 - 염따
