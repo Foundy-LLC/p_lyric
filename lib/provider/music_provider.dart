@@ -6,9 +6,6 @@ import 'package:p_lyric/services/melon_lyric_scraper.dart';
 import 'utils/waiter.dart';
 
 class MusicProvider extends GetxController {
-  static const _channel =
-      const MethodChannel('com.example.p_lyric/MusicProvider');
-
   /// 현재 재생되고 있는 트랙을 반환한다.
   NowPlayingTrack? get track => _track.value;
   Rx<NowPlayingTrack> _track = NowPlayingTrack.notPlaying.obs;
@@ -51,30 +48,27 @@ class MusicProvider extends GetxController {
   }
 
   /// 플레이어가 음악을 재생중인 경우 정지하며, 정지되어 있는 경우 재생한다.
-  Future<bool> playOrPause() async {
+  Future<void> playOrPause() async {
     try {
-      return await _channel.invokeMethod('playOrPause'); // TODO(민성): IOS 구현
+      await NowPlaying.instance.playOrPause(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
-      print("Failed to control music: '${e.message}'.");
-      return false;
+      print("Failed to play or pause music: '${e.message}'.");
     }
   }
 
-  Future<bool> skipPrevious() async {
+  Future<void> skipToPrevious() async {
     try {
-      return await _channel.invokeMethod('skipPrevious'); // TODO(민성): IOS 구현
+      await NowPlaying.instance.skipToPrevious(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
-      print("Failed to control music: '${e.message}'.");
-      return false;
+      print("Failed to skip to previous music: '${e.message}'.");
     }
   }
 
-  Future<bool> skipNext() async {
+  Future<void> skipToNext() async {
     try {
-      return await _channel.invokeMethod('skipNext'); // TODO(민성): IOS 구현
+      await NowPlaying.instance.skipToNext(); // TODO(민성): IOS 구현
     } on PlatformException catch (e) {
-      print("Failed to control music: '${e.message}'.");
-      return false;
+      print("Failed to skip to next music: '${e.message}'.");
     }
   }
 }

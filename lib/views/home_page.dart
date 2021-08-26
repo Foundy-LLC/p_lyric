@@ -305,7 +305,7 @@ class _ControlBarState extends State<_ControlBar>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: musicProvider.skipPrevious,
+                onPressed: musicProvider.skipToPrevious,
                 iconSize: 32,
                 padding: EdgeInsets.zero,
                 icon: Icon(Icons.skip_previous),
@@ -320,7 +320,7 @@ class _ControlBarState extends State<_ControlBar>
                 ),
               ),
               IconButton(
-                onPressed: musicProvider.skipNext,
+                onPressed: musicProvider.skipToNext,
                 iconSize: 32,
                 padding: EdgeInsets.zero,
                 icon: Icon(Icons.skip_next),
