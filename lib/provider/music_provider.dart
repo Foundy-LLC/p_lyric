@@ -77,7 +77,7 @@ class MusicProvider extends GetxController {
 
   void _showErrorSnackBar() {
     Get.showSnackbar(GetBar(
-      message: '음악 컨트롤 에러 발생',
+      message: '음악 컨트롤 에러 발생. 해당 음악 플레이어를 직접 이용해주세요.',
       duration: const Duration(seconds: 3),
     ));
   }
