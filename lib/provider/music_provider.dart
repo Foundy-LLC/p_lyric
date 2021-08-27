@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
@@ -77,8 +78,11 @@ class MusicProvider extends GetxController {
 
   void _showErrorSnackBar() {
     Get.showSnackbar(GetBar(
-      message: '음악 컨트롤 에러 발생. 해당 음악 플레이어를 직접 이용해주세요.',
-      duration: const Duration(seconds: 3),
+      messageText: Text(
+        '연결된 음악 플레이어가 없습니다. 음악 플레이어에서 음악을 재생해주세요.',
+        style: Get.textTheme.bodyText2!.copyWith(color: Colors.white),
+      ),
+      duration: const Duration(seconds: 5),
     ));
   }
 }
