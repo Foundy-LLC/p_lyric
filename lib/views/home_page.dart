@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _isReachedEnd = ValueNotifier(false);
   final ValueNotifier<bool> _showButton = ValueNotifier(false);
+  String? _currentLyric;
 
   @override
   void initState() {
@@ -113,12 +114,18 @@ class _HomePageState extends State<HomePage> {
                     child: GetBuilder<MusicProvider>(
                       builder: (musicProvider) {
                         if (musicProvider.track != null) {
+                          bool isLyricUpdated = false;
+                          if (_currentLyric == null ||
+                              _currentLyric != musicProvider.lyric) {
+                            _currentLyric = musicProvider.lyric;
+                            isLyricUpdated = true;
+                          }
                           final title = musicProvider.track!.title;
 
                           if (title == null) return Text("검색 결과가 없습니다.");
 
                           if (musicProvider.lyric.isNotEmpty) {
-                            _scrollController.jumpTo(0.0);
+                            if (isLyricUpdated) _scrollController.jumpTo(0.0);
                             return Text(musicProvider.lyric);
                           }
                           return Center(child: CircularProgressIndicator());
