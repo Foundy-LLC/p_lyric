@@ -18,8 +18,10 @@ class MusicProvider extends GetxController {
   NowPlayingState get state => _state;
   NowPlayingState _state = NowPlayingState.stopped;
 
-  bool get areLyricsUpdating => _areLyricsUpdating;
-  bool _areLyricsUpdating = false;
+  bool get areLyricsUpdating => _gettingLyricsFutures.isNotEmpty;
+
+  /// 가사를 얻는 [Future] 함수들의 리스트이다.
+  List<Future<String>> _gettingLyricsFutures = [];
 
   @override
   void onInit() {
@@ -29,12 +31,15 @@ class MusicProvider extends GetxController {
   }
 
   void _updateLyric(NowPlayingTrack track) async {
-    _areLyricsUpdating = true;
-    _lyric = await MelonLyricScraper.getLyrics(
+    final gettingLyricsFuture = MelonLyricScraper.getLyrics(
       track.title ?? '',
       track.artist ?? '',
     );
-    _areLyricsUpdating = false;
+    _gettingLyricsFutures.add(gettingLyricsFuture);
+    update();
+
+    _lyric = await gettingLyricsFuture;
+    _gettingLyricsFutures.remove(gettingLyricsFuture);
     update();
   }
 
