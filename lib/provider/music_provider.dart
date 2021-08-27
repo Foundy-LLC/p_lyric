@@ -15,8 +15,8 @@ class MusicProvider extends GetxController {
   String _lyric = '';
 
   /// 음악 플레이어의 상태를 반환한다.
-  NowPlayingState get state => _state;
-  NowPlayingState _state = NowPlayingState.stopped;
+  NowPlayingState get trackState => _trackState;
+  NowPlayingState _trackState = NowPlayingState.stopped;
 
   bool get areLyricsUpdating => _gettingLyricsFutures.isNotEmpty;
 
@@ -50,8 +50,8 @@ class MusicProvider extends GetxController {
       updated = true;
     }
 
-    if (newTrack.state != state) {
-      _state = newTrack.state;
+    if (newTrack.state != trackState) {
+      _trackState = newTrack.state;
       updated = true;
     }
 

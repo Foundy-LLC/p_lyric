@@ -304,7 +304,7 @@ class _ControlBarState extends State<_ControlBar>
       ),
       child: GetBuilder<MusicProvider>(
         builder: (musicProvider) {
-          switch (musicProvider.state) {
+          switch (musicProvider.trackState) {
             case NowPlayingState.playing:
               _controller.forward();
               break;
