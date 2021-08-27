@@ -157,8 +157,60 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _PermissionBottomSheet extends StatelessWidget {
+class _PermissionBottomSheet extends StatefulWidget {
   const _PermissionBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  _PermissionBottomSheetState createState() => _PermissionBottomSheetState();
+}
+
+class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
+    with WidgetsBindingObserver {
+  bool _inProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (_inProgress) {
+          if (await NowPlaying.instance.isEnabled()) {
+            Get.back();
+            Get.showSnackbar(GetBar(
+              message: '권한 허용됨',
+              duration: const Duration(seconds: 3),
+            ));
+          }
+          _inProgress = false;
+        }
+        break;
+      default:
+    }
+  }
+
+  void _onPressedSkip() async {
+    Get.back();
+    Get.showSnackbar(GetBar(
+      message: '설정에서 권한을 설정할 수 있습니다.',
+      duration: const Duration(seconds: 3),
+    ));
+  }
+
+  void _onPressedOk() async {
+    _inProgress = true;
+    await NowPlaying.instance.requestPermissions(force: true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +237,7 @@ class _PermissionBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: Get.back,
+                onPressed: _onPressedSkip,
                 child: Text(
                   '건너뛰기',
                   style: textTheme.button!.copyWith(
@@ -195,10 +247,7 @@ class _PermissionBottomSheet extends StatelessWidget {
               ),
               const SizedBox(width: 8.0),
               TextButton(
-                onPressed: () async {
-                  await NowPlaying.instance.requestPermissions(force: true);
-                  Get.back();
-                },
+                onPressed: _onPressedOk,
                 child: Text(
                   '설정하기',
                   style: textTheme.button!.copyWith(
