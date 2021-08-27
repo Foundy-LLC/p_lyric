@@ -56,21 +56,25 @@ TextTheme get textTheme => TextTheme(
       headline5: GoogleFonts.nanumGothic(
         fontSize: 23,
         fontWeight: FontWeight.w400,
+        height: 1.4,
       ),
       headline6: GoogleFonts.nanumGothic(
         fontSize: 19,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.15,
+        height: 1.45,
       ),
       subtitle1: GoogleFonts.nanumGothic(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.15,
+        height: 1.5,
       ),
       subtitle2: GoogleFonts.nanumGothic(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
+        height: 1.6,
       ),
       bodyText1: GoogleFonts.nanumGothic(
         fontSize: 16,
@@ -82,6 +86,7 @@ TextTheme get textTheme => TextTheme(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.25,
+        height: 1.6
       ),
       button: GoogleFonts.nanumGothic(
         fontSize: 14,
