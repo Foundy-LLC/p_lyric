@@ -113,32 +113,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: GetBuilder<MusicProvider>(
                       builder: (musicProvider) {
-                        if (musicProvider.track != null) {
-                          bool isLyricUpdated = false;
-                          // 가사가 수정된 경우
-                          if (_currentLyrics == null ||
-                              _currentLyrics != musicProvider.lyric) {
-                            _currentLyrics = musicProvider.lyric;
-                            isLyricUpdated = true;
-                          }
-
-                          final title = musicProvider.track!.title;
-                          // 음악 정보가 없으면 빈 위젯을 반환한다.
-                          if (title == null) return const Text('');
-
-                          if (musicProvider.lyric.isNotEmpty) {
-                            if (isLyricUpdated) {
-                              _scrollController.jumpTo(0.0);
-                              WidgetsBinding.instance!
-                                  .addPostFrameCallback((_) {
-                                if (mounted) _updateScrollButton();
-                              });
-                            }
-                            return Text(musicProvider.lyric);
-                          }
-                          return Center(child: CircularProgressIndicator());
+                        final track = musicProvider.track;
+                        bool areLyricsUpdated = false;
+                        // 가사가 수정된 경우
+                        if (_currentLyrics == null ||
+                            _currentLyrics != musicProvider.lyric) {
+                          _currentLyrics = musicProvider.lyric;
+                          areLyricsUpdated = true;
                         }
-                        return Text("검색어를 입력하세요.");
+                        if (areLyricsUpdated) {
+                          if (_scrollController.position.hasViewportDimension)
+                            _scrollController.jumpTo(0.0);
+                          WidgetsBinding.instance!.addPostFrameCallback((_) {
+                            if (mounted) _updateScrollButton();
+                          });
+                        }
+                        // 음악 정보가 없으면 빈 위젯을 반환한다.
+                        if (track.title == null || track.artist == null)
+                          return const Text('');
+
+                        return musicProvider.areLyricsUpdating
+                            ? Center(child: CircularProgressIndicator())
+                            : Text(musicProvider.lyric);
                       },
                     ),
                   ),
@@ -200,7 +196,7 @@ class _CardView extends StatelessWidget {
                   const SizedBox(height: 10.0),
                   GetBuilder<MusicProvider>(
                     builder: (musicProvider) => Text(
-                      musicProvider.track?.title ?? '재생중인 음악 없음',
+                      musicProvider.track.title ?? '재생중인 음악 없음',
                       style: textTheme.subtitle1,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -209,7 +205,7 @@ class _CardView extends StatelessWidget {
                   const SizedBox(height: 8),
                   GetBuilder<MusicProvider>(
                     builder: (musicProvider) => Text(
-                      musicProvider.track?.artist ?? '노래를 재생하면 가사가 업데이트됩니다.',
+                      musicProvider.track.artist ?? '노래를 재생하면 가사가 업데이트됩니다.',
                       style: textTheme.subtitle2!.copyWith(
                         color: Get.isDarkMode ? Colors.white54 : Colors.black54,
                       ),
@@ -238,7 +234,7 @@ class _AlbumCoverImage extends StatelessWidget {
     return GetBuilder<MusicProvider>(
       init: MusicProvider(),
       builder: (musicProvider) {
-        final image = musicProvider.track?.image;
+        final image = musicProvider.track.image;
         final hasImage = image != null;
 
         return AnimatedContainer(
