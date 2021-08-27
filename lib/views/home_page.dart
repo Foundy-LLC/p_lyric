@@ -115,17 +115,25 @@ class _HomePageState extends State<HomePage> {
                       builder: (musicProvider) {
                         if (musicProvider.track != null) {
                           bool isLyricUpdated = false;
+                          // 가사가 수정된 경우
                           if (_currentLyric == null ||
                               _currentLyric != musicProvider.lyric) {
                             _currentLyric = musicProvider.lyric;
                             isLyricUpdated = true;
                           }
-                          final title = musicProvider.track!.title;
 
-                          if (title == null) return Text("검색 결과가 없습니다.");
+                          final title = musicProvider.track!.title;
+                          // 음악 정보가 없으면 빈 위젯을 반환한다.
+                          if (title == null) return const Text('');
 
                           if (musicProvider.lyric.isNotEmpty) {
-                            if (isLyricUpdated) _scrollController.jumpTo(0.0);
+                            if (isLyricUpdated) {
+                              _scrollController.jumpTo(0.0);
+                              WidgetsBinding.instance!
+                                  .addPostFrameCallback((_) {
+                                if (mounted) _updateScrollButton();
+                              });
+                            }
                             return Text(musicProvider.lyric);
                           }
                           return Center(child: CircularProgressIndicator());
@@ -160,8 +168,10 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-        builder: (_, showButton, child) =>
-            showButton ? child! : const SizedBox(),
+        builder: (_, showButton, child) => AnimatedSwitcher(
+          duration: kThemeChangeDuration,
+          child: showButton ? child! : const SizedBox(),
+        ),
       ),
     );
   }
