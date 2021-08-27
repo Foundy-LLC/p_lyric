@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _isReachedEnd = ValueNotifier(false);
   final ValueNotifier<bool> _showButton = ValueNotifier(false);
-  String? _currentLyric;
+  String? _currentLyrics;
 
   @override
   void initState() {
@@ -116,9 +116,9 @@ class _HomePageState extends State<HomePage> {
                         if (musicProvider.track != null) {
                           bool isLyricUpdated = false;
                           // 가사가 수정된 경우
-                          if (_currentLyric == null ||
-                              _currentLyric != musicProvider.lyric) {
-                            _currentLyric = musicProvider.lyric;
+                          if (_currentLyrics == null ||
+                              _currentLyrics != musicProvider.lyric) {
+                            _currentLyrics = musicProvider.lyric;
                             isLyricUpdated = true;
                           }
 
