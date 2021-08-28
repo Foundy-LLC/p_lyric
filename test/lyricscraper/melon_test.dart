@@ -22,7 +22,7 @@ void main() {
       "Fifth Harmony(피프스 하모니)",
       "문문(MoonMoon)",
       "브루노 마스",
-      "도끼"
+      "도끼 Dok2"
     ];
 
     final List<String> filterTitle = ["REMEDY", "달려", "Worth It", "비행운", "That's What I Like","111%"];
