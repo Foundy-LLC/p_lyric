@@ -309,7 +309,9 @@ class _CardView extends StatelessWidget {
                     builder: (musicProvider) => Text(
                       musicProvider.track.artist ?? '노래를 재생하면 가사가 업데이트됩니다.',
                       style: textTheme.subtitle2!.copyWith(
-                        color: Get.isDarkMode ? Colors.white54 : Colors.black54,
+                        color: context.isDarkMode
+                            ? Colors.white54
+                            : Colors.black54,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -402,7 +404,7 @@ class _ControlBarState extends State<_ControlBar>
   Widget build(BuildContext context) {
     return IconTheme(
       data: IconThemeData(
-        color: Get.isDarkMode ? Colors.white : Colors.black,
+        color: context.isDarkMode ? Colors.white : Colors.black,
       ),
       child: GetBuilder<MusicProvider>(
         builder: (musicProvider) {
