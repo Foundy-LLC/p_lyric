@@ -8,7 +8,7 @@ import 'utils/waiter.dart';
 
 class MusicProvider extends GetxController {
   /// 현재 재생되고 있는 트랙을 반환한다.
-  NowPlayingTrack? get track => _track.value;
+  NowPlayingTrack get track => _track.value;
   Rx<NowPlayingTrack> _track = NowPlayingTrack.notPlaying.obs;
 
   /// 현재 재생되고 있는 트랙의 가사를 반환한다.
@@ -16,7 +16,13 @@ class MusicProvider extends GetxController {
   String _lyric = '';
 
   /// 음악 플레이어의 상태를 반환한다.
-  NowPlayingState state = NowPlayingState.stopped;
+  NowPlayingState get trackState => _trackState;
+  NowPlayingState _trackState = NowPlayingState.stopped;
+
+  bool get areLyricsUpdating => _gettingLyricsFutures.isNotEmpty;
+
+  /// 가사를 얻고있는 [Future] 함수들의 [Set]이다.
+  Set<Future<String>> _gettingLyricsFutures = {};
 
   @override
   void onInit() {
@@ -26,10 +32,15 @@ class MusicProvider extends GetxController {
   }
 
   void _updateLyric(NowPlayingTrack track) async {
-    _lyric = await MelonLyricScraper.getLyrics(
+    final gettingLyricsFuture = MelonLyricScraper.getLyrics(
       track.title ?? '',
       track.artist ?? '',
     );
+    _gettingLyricsFutures.add(gettingLyricsFuture);
+    update();
+
+    _lyric = await gettingLyricsFuture;
+    _gettingLyricsFutures.remove(gettingLyricsFuture);
     update();
   }
 
@@ -40,8 +51,8 @@ class MusicProvider extends GetxController {
       updated = true;
     }
 
-    if (newTrack.state != state) {
-      state = newTrack.state;
+    if (newTrack.state != trackState) {
+      _trackState = newTrack.state;
       updated = true;
     }
 
