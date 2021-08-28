@@ -20,8 +20,8 @@ class MusicProvider extends GetxController {
 
   bool get areLyricsUpdating => _gettingLyricsFutures.isNotEmpty;
 
-  /// 가사를 얻는 [Future] 함수들의 리스트이다.
-  List<Future<String>> _gettingLyricsFutures = [];
+  /// 가사를 얻고있는 [Future] 함수들의 [Set]이다.
+  Set<Future<String>> _gettingLyricsFutures = {};
 
   @override
   void onInit() {
