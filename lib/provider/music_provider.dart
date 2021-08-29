@@ -91,7 +91,10 @@ class MusicProvider extends GetxController {
     Get.showSnackbar(GetBar(
       messageText: Text(
         '연결된 음악 플레이어가 없습니다. 음악 플레이어에서 음악을 재생해주세요.',
-        style: Get.textTheme.bodyText2!.copyWith(color: Colors.white),
+        style: Get.textTheme.bodyText2!.copyWith(
+          color: Colors.white,
+          height: 1.6,
+        ),
       ),
       duration: const Duration(seconds: 5),
     ));

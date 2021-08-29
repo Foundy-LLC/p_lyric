@@ -237,12 +237,15 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
         children: [
           Text(
             'PLyric 앱의 알림 접근 권한을 허용해주세요.',
-            style: textTheme.headline5,
+            style: textTheme.headline5!.copyWith(height: 1.4),
           ),
           const SizedBox(height: 8.0),
           Text(
             '현재 재생중인 음악 정보를 얻기 위해 필요합니다.',
-            style: textTheme.bodyText2!.copyWith(color: Color(0xb3000000)),
+            style: textTheme.bodyText2!.copyWith(
+              color: Color(0xb3000000),
+              height: 1.6,
+            ),
           ),
           const SizedBox(height: 16.0),
           Row(
