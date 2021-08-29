@@ -5,6 +5,7 @@ import 'package:p_lyric/provider/music_provider.dart';
 import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_bottom_sheet.dart';
 import 'package:p_lyric/widgets/default_container.dart';
+import 'package:p_lyric/widgets/default_snack_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -200,10 +201,7 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
         if (_inProgress) {
           if (await NowPlaying.instance.isEnabled()) {
             Get.back();
-            Get.showSnackbar(GetBar(
-              message: '권한 허용됨',
-              duration: const Duration(seconds: 3),
-            ));
+            showSnackBar('권한 허용됨');
           }
           _inProgress = false;
         }
@@ -214,10 +212,7 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
 
   void _onPressedSkip() async {
     Get.back();
-    Get.showSnackbar(GetBar(
-      message: '설정에서 권한을 설정할 수 있습니다.',
-      duration: const Duration(seconds: 3),
-    ));
+    showSnackBar('설정에서 권한을 설정할 수 있습니다.');
   }
 
   void _onPressedOk() async {
