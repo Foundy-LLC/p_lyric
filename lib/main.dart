@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
-import 'package:p_lyric/themes.dart';
+import 'package:p_lyric/style/color.dart';
+import 'package:p_lyric/style/font.dart';
 import 'package:p_lyric/views/home_page.dart';
 
 void main() async {
@@ -15,21 +16,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconThemeData = const IconThemeData(color: Colors.white70);
     final cardShape = const RoundedRectangleBorder(
-      borderRadius: const BorderRadius.all(
-        const Radius.circular(12.0),
-      ),
+      borderRadius: const BorderRadius.all(const Radius.circular(12.0)),
     );
 
     final themeData = ThemeData(
       iconTheme: iconThemeData,
-      primaryTextTheme: primaryTextTheme,
+      primaryTextTheme: poppinsTextTheme.apply(fontFamily: FontFamily.poppins),
     );
 
     return GetMaterialApp(
       theme: themeData.copyWith(
         brightness: Brightness.light,
         colorScheme: lightColorScheme,
-        textTheme: textTheme.apply(
+        textTheme: nanumGothicTextTheme.apply(
+          fontFamily: FontFamily.nanumGothic,
           bodyColor: Colors.black87,
           displayColor: Colors.black87,
         ),
@@ -42,7 +42,8 @@ class MyApp extends StatelessWidget {
       darkTheme: themeData.copyWith(
         brightness: Brightness.dark,
         colorScheme: darkColorScheme,
-        textTheme: textTheme.apply(
+        textTheme: nanumGothicTextTheme.apply(
+          fontFamily: FontFamily.nanumGothic,
           bodyColor: Colors.white,
           displayColor: Colors.white,
         ),
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
           color: const Color(0xff121212),
         ),
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
