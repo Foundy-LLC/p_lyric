@@ -6,6 +6,7 @@ import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_bottom_sheet.dart';
 import 'package:p_lyric/widgets/default_container.dart';
 import 'package:p_lyric/widgets/default_snack_bar.dart';
+import 'package:p_lyric/widgets/subtitle.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -92,7 +93,11 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: const _CardView(),
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 12.0),
+            child: const SubTitle('가사'),
+          ),
           Expanded(
             child: SingleChildScrollView(
               controller: _scrollController,
