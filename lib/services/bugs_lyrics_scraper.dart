@@ -58,7 +58,7 @@ Future<bool> isExplicitSong(String songID) async {
 Future<String> getLyricsFromBugs(String songTitle, String songArtist) async {
   if (songTitle == '' || songArtist == '') return "곡 정보가 없습니다 😢";
 
-  String title = SongDataPreprocessor.filterArtist(songTitle);
+  String title = SongDataPreprocessor.filterSongTitle(songTitle);
   String artist = SongDataPreprocessor.filterArtist(songArtist);
 
   String searchPageUrl = _getSearchPageUrl(title, artist);
