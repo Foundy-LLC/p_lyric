@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:p_lyric/services/song_data_preprocessor.dart';
 
 void main() {
-  test("Melon lyric scraper title and artist filtering test", () {
+  test("Bugs lyrics scraper title and artist filtering test", () {
     // TEST CASE
     // 1. REMEDY(피처링:청하(CHUNG HA)) - 창모(CHANGMO) → REMEDY - 창모
     // 2. 달려 - 염따, 더 콰이엇(The Quiett), 팔토알토 및 사이먼 도미닉 및 딥플로우(Deepflow) → 달려 - 염따
@@ -22,11 +22,27 @@ void main() {
       "Fifth Harmony(피프스 하모니)",
       "문문(MoonMoon)",
       "브루노 마스",
-      "도끼 Dok2"
+      "도끼 Dok2",
+      "pH-1"
     ];
 
-    final List<String> filterTitle = ["REMEDY", "달려", "Worth It", "비행운", "That's What I Like","111%"];
-    final List<String> filterArtist = ["창모", "염따", "Fifth Harmony", "문문", "브루노 마스", "도끼"];
+    final List<String> filterTitle = [
+      "REMEDY",
+      "달려",
+      "Worth It",
+      "비행운",
+      "That's What I Like",
+      "111%"
+    ];
+    final List<String> filterArtist = [
+      "창모",
+      "염따",
+      "Fifth Harmony",
+      "문문",
+      "브루노 마스",
+      "도끼",
+      "pH-1"
+    ];
 
     int index = 0;
     for (final song in testTitle) {
