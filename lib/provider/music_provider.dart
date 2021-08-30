@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
-import 'package:p_lyric/services/melon_lyric_scraper.dart';
+import 'package:p_lyric/services/bugs_lyrics_scraper.dart';
 import 'package:p_lyric/widgets/default_snack_bar.dart';
 
 import 'utils/waiter.dart';
@@ -32,7 +32,7 @@ class MusicProvider extends GetxController {
   }
 
   void _updateLyric(NowPlayingTrack track) async {
-    final gettingLyricsFuture = MelonLyricScraper.getLyrics(
+    final gettingLyricsFuture = getLyricsFromBugs(
       track.title ?? '',
       track.artist ?? '',
     );
