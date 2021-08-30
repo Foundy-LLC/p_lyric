@@ -8,7 +8,7 @@ const String baseUrl = 'https://music.bugs.co.kr/track/';
 String _getSearchPageUrl(String title, String artist) {
   String searchQuery;
 
-  artist = "%2C+" + artist;
+  artist = "%2C" + artist;
   searchQuery = title + artist;
 
   return 'https://music.bugs.co.kr/search/integrated?q=$searchQuery';
