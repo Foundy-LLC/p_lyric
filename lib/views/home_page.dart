@@ -5,6 +5,8 @@ import 'package:p_lyric/provider/music_provider.dart';
 import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_bottom_sheet.dart';
 import 'package:p_lyric/widgets/default_container.dart';
+import 'package:p_lyric/widgets/default_snack_bar.dart';
+import 'package:p_lyric/widgets/subtitle.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -91,7 +93,11 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: const _CardView(),
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 12.0),
+            child: const SubTitle('가사'),
+          ),
           Expanded(
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -200,10 +206,7 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
         if (_inProgress) {
           if (await NowPlaying.instance.isEnabled()) {
             Get.back();
-            Get.showSnackbar(GetBar(
-              message: '권한 허용됨',
-              duration: const Duration(seconds: 3),
-            ));
+            showSnackBar('권한 허용됨');
           }
           _inProgress = false;
         }
@@ -214,10 +217,7 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
 
   void _onPressedSkip() async {
     Get.back();
-    Get.showSnackbar(GetBar(
-      message: '설정에서 권한을 설정할 수 있습니다.',
-      duration: const Duration(seconds: 3),
-    ));
+    showSnackBar('설정에서 권한을 설정할 수 있습니다.');
   }
 
   void _onPressedOk() async {
@@ -237,12 +237,15 @@ class _PermissionBottomSheetState extends State<_PermissionBottomSheet>
         children: [
           Text(
             'PLyric 앱의 알림 접근 권한을 허용해주세요.',
-            style: textTheme.headline5,
+            style: textTheme.headline5!.copyWith(height: 1.4),
           ),
           const SizedBox(height: 8.0),
           Text(
             '현재 재생중인 음악 정보를 얻기 위해 필요합니다.',
-            style: textTheme.bodyText2!.copyWith(color: Color(0xb3000000)),
+            style: textTheme.bodyText2!.copyWith(
+              color: Color(0xb3000000),
+              height: 1.6,
+            ),
           ),
           const SizedBox(height: 16.0),
           Row(
