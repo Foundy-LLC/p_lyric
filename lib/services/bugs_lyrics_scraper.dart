@@ -6,33 +6,31 @@ import 'package:p_lyric/services/song_data_preprocessor.dart';
 const String baseUrl = 'https://music.bugs.co.kr/track/';
 
 String _getSearchPageUrl(String title, String artist) {
-  String searchQuery;
+  title = title.replaceAll(" ", "%20");
+  artist = "%2C%20" + artist.replaceAll(" ", "%20");
 
-  artist = "%2C" + artist;
-  searchQuery = title + artist;
+  String searchQuery = title + artist;
+
+  print(searchQuery);
 
   return 'https://music.bugs.co.kr/search/integrated?q=$searchQuery';
 }
 
 Future<String> _getSongID(String searchedPage) async {
-  String songID;
+  String songID = "";
 
   try {
     final response = await http.get(
       Uri.parse(searchedPage),
     );
     dom.Document document = parser.parse(response.body);
-    final elements = document.getElementsByClassName('check');
-    final songList = elements.map((element) {
-      return element.attributes['value'];
-    }).toList();
-    if (songList.length < 2) {
-      // 맨 위에 전체선택 체크박스 포함
-      return '곡 정보가 없습니다 😢';
-    }
+    final elements = document.getElementsByClassName("check");
 
-    // 0번째 인덱스는 `모든 체크박스`의 값이다. 따라서 1번째 값을 이용한다.
-    songID = songList[1] ?? '';
+    if (elements.length == 0) return '곡 정보가 없습니다 😢';
+
+    String songID = elements[1].children[0].attributes['value'].toString();
+
+    print(songID);
     return songID;
   } catch (e) {
     return '🤔 노래 검색 에러\n$e';
@@ -45,8 +43,7 @@ Future<bool> isExplicitSong(String songID) async {
     dom.Document document = parser.parse(response.body);
     String checkAge =
         document.getElementsByClassName('certificationGuide').first.innerHtml;
-
-    return (checkAge.contains("19금")) ? true : false;
+    return (checkAge.contains("19세")) ? true : false;
   } catch (e) {
     return false;
   }
@@ -67,13 +64,21 @@ Future<String> getLyricsFromBugs(String songTitle, String songArtist) async {
 
     final response = await http.get(Uri.parse(baseUrl + songID));
     dom.Document document = parser.parse(response.body);
-    final lyrics = document.getElementsByTagName('xmp').first.innerHtml;
+    final lyricsContainer = document.getElementsByTagName('xmp');
 
-    if (lyrics.isEmpty)
+    if (lyricsContainer.isEmpty)
       throw '가사를 찾을 수 없습니다\nTitle : $title\nArtist : $artist\n';
 
-    return lyrics;
+    final lyrics =
+        lyricsContainer.first.innerHtml.toString().replaceAll("...*", "");
+
+    return lyrics.trim();
   } catch (e) {
     return '🤔 노래 검색 에러\n$e';
   }
+}
+
+void main() async {
+  final asdf = await getLyricsFromBugs("Stay", "The Kid Laroi");
+  print(asdf);
 }
