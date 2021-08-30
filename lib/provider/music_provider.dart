@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
 import 'package:p_lyric/services/melon_lyric_scraper.dart';
+import 'package:p_lyric/widgets/default_snack_bar.dart';
 
 import 'utils/waiter.dart';
 
@@ -88,12 +88,9 @@ class MusicProvider extends GetxController {
   }
 
   void _showErrorSnackBar() {
-    Get.showSnackbar(GetBar(
-      messageText: Text(
-        '연결된 음악 플레이어가 없습니다. 음악 플레이어에서 음악을 재생해주세요.',
-        style: Get.textTheme.bodyText2!.copyWith(color: Colors.white),
-      ),
+    showSnackBar(
+      '연결된 음악 플레이어가 없습니다. 음악 플레이어에서 음악을 재생해주세요.',
       duration: const Duration(seconds: 5),
-    ));
+    );
   }
 }
