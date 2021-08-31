@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(
                   left: 24.0,
                   right: 24.0,
-                  bottom: 16.0,
+                  bottom: 72.0,
                 ),
                 child: SizedBox(
                   width: double.infinity,
