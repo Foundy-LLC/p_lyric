@@ -1,6 +1,7 @@
 class SongDataPreprocessor {
-  static RegExp _korean = new RegExp(r"^[가-힣0-9,_.\'\+%!@#$&?\-\ ]*$");
-  static RegExp _english = new RegExp(r"^[A-Za-zÀ-ȕ0-9,_.\'\+%!@#$&?\-\ ]*$");
+  static RegExp _korean = new RegExp(r"^[가-힣 ]*$");
+  static RegExp _english = new RegExp(r"^[A-Za-zÀ-ȕ ]*$");
+  static RegExp _special = new RegExp(r"^[0-9,_.\'\+%!@#$&?\-\ ]*$");
 
   static bool _isStartWithKorean(String title) {
     bool ret;
@@ -18,7 +19,7 @@ class SongDataPreprocessor {
     List<String> words = target.split("");
 
     for (final word in words) {
-      if (word == " ") {
+      if (word == " " || _special.hasMatch(word)) {
         korExtract += word;
         engExtract += word;
         continue;
