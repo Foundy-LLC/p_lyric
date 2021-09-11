@@ -147,7 +147,7 @@ packages:
     description:
       path: "."
       ref: p-lyric-app
-      resolved-ref: a174a32af43b87573979f9674c2c7d5f47a03151
+      resolved-ref: "2cec21a511f71cd9bd8071c3aed35ca495a1da26"
       url: "https://github.com/jja08111/nowplaying.git"
     source: git
     version: "2.0.2"
@@ -317,15 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  system_shortcuts:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: p-lyric-app
-      resolved-ref: ca0588c2b1d447b7a9fdb22ba63beee4aa788914
-      url: "https://github.com/jja08111/SystemShortcutsFlutter.git"
-    source: git
-    version: "1.0.0"
   term_glyph:
     dependency: transitive
     description:

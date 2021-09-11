@@ -23,8 +23,6 @@ class MainActivity : FlutterActivity() {
     override fun onPause() {
         super.onPause()
         setAppVisibleKey(false)
-
-        FloatingWindowService.startFloatingService(this, true)
     }
 
     private fun setAppVisibleKey(state: Boolean) {

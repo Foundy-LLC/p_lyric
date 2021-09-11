@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:nowplaying/nowplaying.dart';
 import 'package:p_lyric/provider/music_provider.dart';
 import 'package:p_lyric/provider/permission_provider.dart';
 import 'package:p_lyric/views/setting_page.dart';
 import 'package:p_lyric/widgets/default_container.dart';
+import 'package:p_lyric/widgets/default_snack_bar.dart';
 import 'package:p_lyric/widgets/subtitle.dart';
-import 'package:system_shortcuts/system_shortcuts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -71,7 +72,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   /// 축소 버튼을 눌렀을 때 앱을 종료하고 윈도우 오버레이를 띄운다.
   void _handleCollapseButtonTap() async {
-    await SystemShortcuts.home();
+    bool success = false;
+    String? errorMessage;
+    try {
+      success = await NowPlaying.instance.showFloatingWindow();
+    } on PlatformException catch (e) {
+      print(e);
+      errorMessage = e.message ?? '';
+    }
+
+    if (success) {
+      SystemNavigator.pop();
+    } else {
+      showSnackBar(errorMessage != null ? errorMessage : "윈도우 전환에 실패했습니다.");
+    }
   }
 
   void _handleScrollButtonTap({bool toBottom = true}) {
