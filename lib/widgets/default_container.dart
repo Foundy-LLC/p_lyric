@@ -117,13 +117,12 @@ class _DefaultContainerState extends State<DefaultContainer> {
               ),
             ),
           ),
-          if (banner != null)
-            Container(
-              height: AdSize.banner.height.toDouble(),
-              child: AdWidget(ad: banner!),
-            )
-          else
-            SizedBox(height: AdSize.banner.height.toDouble())
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            height: banner != null ? AdSize.banner.height.toDouble() : 0,
+            child: banner != null ? AdWidget(ad: banner!) : null,
+          ),
         ],
       ),
     );
