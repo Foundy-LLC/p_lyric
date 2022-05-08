@@ -62,7 +62,7 @@ class _PermissionBottomSheetState extends State<PermissionBottomSheet> {
       color: context.isDarkMode ? Colors.white70 : const Color(0xb3000000),
     );
     final accentColor =
-        context.isDarkMode ? colorScheme.primary : colorScheme.primaryVariant;
+        context.isDarkMode ? colorScheme.primary : colorScheme.primaryContainer;
 
     return WillPopScope(
       onWillPop: () => Future(() => false),
